@@ -11,7 +11,11 @@ const CtaSchema = z.object({
 	cta: z.string().optional(),
 });
 
-export async function getCta(content: string, { openAiKey }: { openAiKey: string }) {
+export async function getCta(content: string, { openAiKey }: { openAiKey?: string }) {
+	if (!openAiKey) {
+		return { ctaType: 'NONE' as const };
+	}
+
 	const openai = createOpenAI({ apiKey: openAiKey, compatibility: 'strict' });
 
 	const { object } = await generateObject({
