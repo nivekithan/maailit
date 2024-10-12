@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1728737670446,
+      "tag": "0000_brown_sentinel",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1728738162527,
+      "tag": "0001_thin_mad_thinker",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1728741028934,
+      "tag": "0002_far_devos",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1728741065225,
+      "tag": "0003_violet_colleen_wing",
+      "breakpoints": true
+    }
+  ]
+}
