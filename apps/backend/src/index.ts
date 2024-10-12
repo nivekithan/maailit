@@ -42,7 +42,7 @@ export default {
 		const emailContent = { html: emailBody, from: message.from, to: message.to, subject: email.subject };
 
 		console.log(emailContent);
-		env.EMAIL_QUEUE.send(emailContent);
+		await env.EMAIL_QUEUE.send(emailContent);
 
 		return;
 	},

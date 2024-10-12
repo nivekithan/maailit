@@ -12,34 +12,39 @@ const CtaSchema = z.object({
 });
 
 export async function getCta(content: string, { openAiKey }: { openAiKey?: string }) {
-	if (!openAiKey) {
-		return { ctaType: 'NONE' as const };
-	}
+	try {
+		if (!openAiKey) {
+			return { ctaType: 'NONE' as const };
+		}
 
-	const openai = createOpenAI({ apiKey: openAiKey, compatibility: 'strict' });
+		const openai = createOpenAI({ apiKey: openAiKey, compatibility: 'strict' });
 
-	const { object } = await generateObject({
-		model: openai('gpt-4o-mini'),
-		schema: CtaSchema,
-		maxRetries: 3,
+		const { object } = await generateObject({
+			model: openai('gpt-4o-mini'),
+			schema: CtaSchema,
+			maxRetries: 3,
 
-		messages: [
-			{
-				role: 'system',
-				content: `The message below is an email. Based on the content choose proper cta and it's content.
+			messages: [
+				{
+					role: 'system',
+					content: `The message below is an email. Based on the content choose proper cta and it's content.
 					1. Incase the email does not contain any CTA choose the ctaType to be 'NONE'.
 					2. Incase the CTA is to copy paste a code choose the ctaType to be 'CODE'.
 					3. Incase the CTA is to click on a link choose the ctaType to be 'LINK'.
 					`,
-			},
-			{
-				role: 'user',
-				content: content,
-			},
-		],
-	});
+				},
+				{
+					role: 'user',
+					content: content,
+				},
+			],
+		});
 
-	console.log(object);
+		console.log(object);
 
-	return object;
+		return object;
+	} catch (error) {
+		console.error(error);
+		return { ctaType: 'NONE' as const };
+	}
 }
