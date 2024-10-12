@@ -5,6 +5,8 @@ import { emailTable } from './db/schema';
 import { getDb } from './db/utils';
 import pLimit from 'p-limit';
 import { getCta } from './features/getCta';
+import { routePartykitRequest } from 'partyserver';
+import { RealtimeEmails } from './features/realtimeEmails';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -27,7 +29,15 @@ app.post('/test/:email', async (c) => {
 app.route('/email', emailRouter);
 
 export default {
-	fetch: app.fetch,
+	async fetch(request, env, ctx) {
+		const result = await routePartykitRequest<Env>(request, env as any);
+
+		if (!result) {
+			return app.fetch(request, env, ctx);
+		}
+
+		return result;
+	},
 
 	async email(message, env) {
 		const messageContent = await streamToArrayBuffer(message.raw, message.rawSize);
@@ -100,3 +110,5 @@ type EmailQueueMessage = {
 	subject: string | undefined;
 	html: string;
 };
+
+export { RealtimeEmails };

@@ -24,6 +24,7 @@
 		"hono": "^4.6.4",
 		"mimetext": "^3.0.24",
 		"p-limit": "^6.1.0",
+		"partyserver": "^0.0.56",
 		"postal-mime": "^2.3.2",
 		"zod": "^3.23.8"
 	}
