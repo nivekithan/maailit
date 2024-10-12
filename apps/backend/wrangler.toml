@@ -116,3 +116,6 @@ max_batch_size = 10
 # [[vectorize]]
 # binding = "MY_INDEX"
 #Hone  index_name = "my-index"
+
+[triggers]
+crons = ["*/15 * * * *"]

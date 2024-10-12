@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"deploy": "wrangler deploy",
-		"dev": "wrangler dev",
+		"dev": "wrangler dev --test-scheduled",
 		"start": "wrangler dev",
 		"cf-typegen": "wrangler types",
 		"db:generate": "drizzle-kit generate",
@@ -20,6 +20,7 @@
 	"dependencies": {
 		"@ai-sdk/openai": "^0.0.66",
 		"ai": "^3.4.9",
+		"date-fns": "^4.1.0",
 		"drizzle-orm": "^0.34.1",
 		"hono": "^4.6.4",
 		"mimetext": "^3.0.24",

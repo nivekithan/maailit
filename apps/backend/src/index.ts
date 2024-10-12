@@ -6,7 +6,8 @@ import { getDb } from './db/utils';
 import pLimit from 'p-limit';
 import { getCta } from './features/getCta';
 import { routePartykitRequest } from 'partyserver';
-import { broadcastEmails, RealtimeEmails } from './features/realtimeEmails';
+import { broadcastEmails, deleteEmailsFromRooms, RealtimeEmails } from './features/realtimeEmails';
+import { EmailTable } from './db/email';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -39,6 +40,17 @@ export default {
 		return result;
 	},
 
+	async scheduled(event, env) {
+		const EmailDao = new EmailTable(env.DB);
+
+		const deletedEmails = await EmailDao.deleteEmailsOlderThan15mins();
+
+		console.log({ deletedEmails });
+
+		await deleteEmailsFromRooms(deletedEmails, env);
+
+		return;
+	},
 	async email(message, env) {
 		const messageContent = await streamToArrayBuffer(message.raw, message.rawSize);
 		const email = await EmailParser.parse(messageContent);
