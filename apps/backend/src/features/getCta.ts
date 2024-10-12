@@ -22,7 +22,7 @@ export async function getCta(content: string, { openAiKey }: { openAiKey?: strin
 		const { object } = await generateObject({
 			model: openai('gpt-4o-mini'),
 			schema: CtaSchema,
-			maxRetries: 3,
+			maxRetries: 1,
 
 			messages: [
 				{

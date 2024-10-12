@@ -6,7 +6,7 @@ import { getDb } from './db/utils';
 import pLimit from 'p-limit';
 import { getCta } from './features/getCta';
 import { routePartykitRequest } from 'partyserver';
-import { RealtimeEmails } from './features/realtimeEmails';
+import { broadcastEmails, RealtimeEmails } from './features/realtimeEmails';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -71,17 +71,22 @@ export default {
 			}),
 		);
 
-		await db.insert(emailTable).values(
-			emailsWithCta.map((email) => ({
-				body: email.html,
-				subject: email.subject,
-				from: email.from,
-				to: email.to,
-				ctaType: email.ctaType,
-				createdAt: new Date().toISOString(),
-				ctaContent: email.ctaText,
-			})),
-		);
+		const insertedRows = await db
+			.insert(emailTable)
+			.values(
+				emailsWithCta.map((email) => ({
+					body: email.html,
+					subject: email.subject,
+					from: email.from,
+					to: email.to,
+					ctaType: email.ctaType,
+					createdAt: new Date().toISOString(),
+					ctaContent: email.ctaText,
+				})),
+			)
+			.returning();
+
+		await broadcastEmails(insertedRows, env);
 
 		batch.ackAll();
 

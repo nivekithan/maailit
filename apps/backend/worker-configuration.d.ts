@@ -2,7 +2,7 @@
 
 interface Env {
 	OPENAI_API_KEY: string;
-	REALTIME_EMAILS: DurableObjectNamespace<import("./src/index").RealtimeEmails>;
+	RealtimeEmails: DurableObjectNamespace<import("./src/index").RealtimeEmails>;
 	DB: D1Database;
 	EMAIL_QUEUE: Queue;
 }
