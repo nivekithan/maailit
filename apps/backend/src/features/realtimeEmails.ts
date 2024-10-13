@@ -23,11 +23,11 @@ export class RealtimeEmails extends Server<Env> implements DurableObject {
 	}
 
 	async onConnect(connection: Connection) {
-		const allEmails = await this.ctx.storage.list();
+		const allEmails = await this.ctx.storage.list<EmailRow>();
 
 		console.log({ allEmails, room: this.name });
 
-		const allEmailsInArray = Array.from(allEmails.values());
+		const allEmailsInArray = Array.from(allEmails.values()).sort(sortEmails);
 
 		connection.send(JSON.stringify(allEmailsInArray));
 	}
@@ -42,7 +42,7 @@ export class RealtimeEmails extends Server<Env> implements DurableObject {
 
 		this.ctx.storage.put(emailsInObject);
 
-		this.broadcast(JSON.stringify(Object.values(emailsInObject)));
+		this.broadcast(JSON.stringify(Object.values(emailsInObject).sort(sortEmails)));
 	}
 
 	async deleteEmails(ids: number[]) {
@@ -107,4 +107,8 @@ async function deleteEmailsFromRoom({ ids, env, name }: { name: string; ids: num
 	const stub = await getServerByName(env.RealtimeEmails, name);
 
 	return stub.deleteEmails(ids);
+}
+
+function sortEmails(a: EmailRow, b: EmailRow) {
+	return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 }

@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build:worker": "cloudflare",
+    "dev:worker": "wrangler dev --port 8771",
+    "preview:worker": "npm run build:worker && npm run dev:worker",
+    "deploy:worker": "npm run build:worker && wrangler deploy",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -24,6 +28,7 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^0.2.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

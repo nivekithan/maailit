@@ -1,0 +1,6 @@
+main = ".worker-next/index.mjs"
+name = "maail-it-web"
+compatibility_date = "2024-10-13"
+compatibility_flags = ["nodejs_compat"]
+assets = { directory = ".worker-next/assets", binding = "ASSETS" }
+
