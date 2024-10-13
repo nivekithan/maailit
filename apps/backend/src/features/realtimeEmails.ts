@@ -42,7 +42,7 @@ export class RealtimeEmails extends Server<Env> implements DurableObject {
 
 		this.ctx.storage.put(emailsInObject);
 
-		this.broadcast(JSON.stringify(emailsInObject));
+		this.broadcast(JSON.stringify(Object.values(emailsInObject)));
 	}
 
 	async deleteEmails(ids: number[]) {
