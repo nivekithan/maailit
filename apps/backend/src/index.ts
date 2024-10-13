@@ -8,8 +8,11 @@ import { getCta } from './features/getCta';
 import { routePartykitRequest } from 'partyserver';
 import { broadcastEmails, deleteEmailsFromRooms, RealtimeEmails } from './features/realtimeEmails';
 import { EmailTable } from './db/email';
+import { cors } from 'hono/cors';
 
 const app = new Hono<{ Bindings: Env }>();
+
+app.use('*', cors());
 
 app.post('/test/:email', async (c) => {
 	const email = c.req.param('email');
