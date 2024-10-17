@@ -6,7 +6,7 @@
     "build": "cloudflare",
     "dev:worker": "wrangler dev --port 8771",
     "preview:worker": "npm run build:worker && npm run dev:worker",
-    "deploy:worker": "npm run build:worker && wrangler deploy",
+    "deploy": "wrangler deploy",
     "dev": "next dev",
     "start": "next start",
     "lint": "next lint"
