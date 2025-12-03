@@ -1,10 +1,10 @@
-import usePartySocket from "partysocket/react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { useHotkeys } from "react-hotkeys-hook";
 import NewMailDialog from "~/components/NewMailDailog";
 import { motion } from "motion/react";
+import { usePartySocket } from "~/lib/socket.client";
 
 export type EmailType = {
   id: number;
@@ -18,15 +18,18 @@ export type EmailType = {
 };
 
 export default function Inbox() {
+  if (typeof window == "undefined") {
+    return null;
+  }
   const [selectedEmail, setSelectedEmail] = useState<EmailType | null>(null);
   const [mailData, setMailData] = useState<Array<EmailType>>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [isNewEmailDialogOpen, setIsNewEmailDialogOpen] =
     useState<boolean>(false);
 
-  const { slug } = useParams<{ slug: "1" }>();
+  const { slug } = useParams();
 
-  const socket = usePartySocket({
+  usePartySocket({
     host: "maailit-backend.nivekithan.workers.dev",
     room: slug,
     party: "realtime-emails",
@@ -38,7 +41,18 @@ export default function Inbox() {
       console.log("Received a message:", evt.data);
       const message = JSON.parse(evt.data as string) as EmailType[];
       console.log(message, "message");
-      setMailData((prevMessages) => [...message, ...prevMessages]);
+      setMailData((prevMessages) => {
+        const combined = [...message, ...prevMessages];
+        const seenIds = new Set<number>();
+        const uniqueById: EmailType[] = [];
+        for (const mail of combined) {
+          if (!seenIds.has(mail.id)) {
+            seenIds.add(mail.id);
+            uniqueById.push(mail);
+          }
+        }
+        return uniqueById;
+      });
     },
     onError(err) {
       console.log(err);
@@ -91,7 +105,7 @@ export default function Inbox() {
 
   useHotkeys(["ctrl+k", "meta+k"], (e) => {
     e.preventDefault();
-    setIsNewEmailDialogOpen(!isNewEmailDialogOpen);
+    setIsNewEmailDialogOpen(true);
   });
 
   useEffect(() => {
@@ -110,16 +124,17 @@ export default function Inbox() {
       className="w-full p-2 bg-neutral-800 bg rounded-lg flex flex-1 overflow-y-auto max-h-[calc(100vh-180px)] gap-2 h-full text-neutral-200"
     >
       <NewMailDialog
+        key={slug}
         isOpen={isNewEmailDialogOpen}
         setIsOpen={setIsNewEmailDialogOpen}
       />
-      <div className="w-[25%] p-1 bg-neutral-900/60 border border-neutral-800 sticky top-0 overflow-y-auto h-full rounded-lg no-scrollbar backdrop-blur">
+      <div className="w-[25%] p-1 bg-neutral-900/60 border border-neutral-800 sticky top-0 overflow-y-auto h-full rounded-lg no-scrollbar backdrop-blur gap-2 flex flex-col">
         {mailData.map((mail) => (
           <motion.button
             onClick={() => setSelectedEmail(mail)}
             key={mail.id}
             className={twMerge(
-              "flex flex-col cursor-pointer gap-2 w-full p-2 text-left transition-colors border-b border-neutral-800",
+              "flex flex-col cursor-pointer gap-2 w-full p-2 text-left transition-colors border-b border-neutral-800 rounded-md",
               selectedEmail?.id === mail.id
                 ? "bg-neutral-800"
                 : "hover:bg-neutral-800/60"
@@ -128,11 +143,11 @@ export default function Inbox() {
             whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.15 }}
           >
-            <p className="text-sm font-semibold text-neutral-100">
-              {mail.from}
-            </p>
-            <p className="text-xs text-neutral-400 line-clamp-1">
+            <p className="text-sm font-semibold text-neutral-100 line-clamp-1 text-ellipsis">
               {mail.subject}
+            </p>
+            <p className="text-xs text-neutral-400  text-ellipsis line-clamp-1 ">
+              {mail.from}
             </p>
           </motion.button>
         ))}
@@ -141,6 +156,8 @@ export default function Inbox() {
       <div className="w-[80%] h-full overflow-y-auto no-scrollbar flex flex-col gap-2">
         {selectedEmail && (
           <motion.div
+            key={selectedEmail.id}
+            className="w-full h-full"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}

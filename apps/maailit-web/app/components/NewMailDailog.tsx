@@ -1,4 +1,3 @@
-import { useHotkeys } from "react-hotkeys-hook";
 import EmailForm from "./EmailForm";
 import {
   Dialog,
@@ -18,8 +17,8 @@ export default function NewMailDialog({
 }) {
   return (
     <Dialog modal open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-2xl bg-white rounded-lg">
-        <EmailForm isusedInDialog={true} className="bg-white" />
+      <DialogContent className="sm:max-w-3xl px-4 py-4 bg-neutral-900 border-none mong rounded-md h-[40vh]">
+        <EmailForm isusedInDialog={true} className="" />
       </DialogContent>
     </Dialog>
   );

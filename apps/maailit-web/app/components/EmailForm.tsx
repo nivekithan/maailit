@@ -33,12 +33,16 @@ export default function EmailForm({
     <div
       className={twMerge(
         "rounded-[20px] flex items-center  gap-4 w-full h-full",
-        className
+        className,
+        isusedInDialog && "rounded-md"
       )}
     >
       <Form
         onSubmit={handleSubmit}
-        className="flex flex-col  justify-center rounded-3xl h-full w-full gap-4 text-[#f8f4ec]"
+        className={twMerge(
+          "flex flex-col  justify-center rounded-3xl h-full w-full gap-4 text-[#f8f4ec]",
+          isusedInDialog && "bg-neutral-900 rounded-md"
+        )}
         method="post"
       >
         <motion.div
@@ -92,7 +96,11 @@ export default function EmailForm({
           <div className="flex flex-col mt-3">
             <motion.button
               type="submit"
-              className="text-neutral-50 w-full bg-neutral-900 text-sm font-semibold hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-[#e7c5f7]/80 h-12 rounded-md justify-center flex items-center gap-2 hover:bg-neutral-800 transition-colors group"
+              className={twMerge(
+                "text-neutral-50 w-full bg-neutral-900 text-sm font-semibold hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-[#e7c5f7]/80 h-12 rounded-md justify-center flex items-center gap-2 hover:bg-neutral-800 transition-colors group",
+                isusedInDialog &&
+                  "bg-slate-100 text-neutral-900 hover:bg-neutral-600"
+              )}
               whileHover={{ y: -1 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.15 }}

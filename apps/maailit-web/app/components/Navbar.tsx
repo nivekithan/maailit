@@ -7,7 +7,7 @@ export default function Navbar() {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="max-w-7xl bg-neutral-900/60 backdrop-blur border border-neutral-800 rounded-full mx-auto flex items-center justify-between w-full py-2 px-4 gap-4 text-neutral-200"
+      className="max-w-7xl bg-neutral-900/60 backdrop-blur border border-neutral-800 rounded-xl mx-auto flex items-center justify-between w-full py-2 px-2 gap-4 text-neutral-200"
     >
       <Link to="/" className="flex items-center gap-2 justify-between group">
         <motion.div
