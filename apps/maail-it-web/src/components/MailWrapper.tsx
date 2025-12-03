@@ -2,7 +2,7 @@
 import { EmailType } from "@/lib/queryHooks";
 import { ArrowDownUp, Ban, Copy, Pointer } from "lucide-react";
 import { useParams } from "next/navigation";
-import { usePartySocket } from "partysocket/react";
+import usePartySocket from "partysocket/react";
 import React, { useEffect, useState } from "react";
 
 function MailWrapper() {
@@ -13,7 +13,7 @@ function MailWrapper() {
   const { slug } = useParams<{ slug: "1" }>();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  usePartySocket({
+  const socket = usePartySocket({
     host: "maailit-backend.nivekithan.workers.dev",
     room: slug,
     party: "realtime-emails",
